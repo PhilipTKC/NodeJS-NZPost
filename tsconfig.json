@@ -1,11 +1,11 @@
 {
     "compilerOptions": {
-        "target": "ESNext",
-        "module": "CommonJS",
+        "target": "ES2015",
+        "module": "ESNext",
         "strict": true,
         "esModuleInterop": true,
         "skipLibCheck": true,
-        "outDir": "./dist",
+        "outDir": "dist",
         "rootDir": "./src",
         "moduleResolution": "node",
         "noEmit": false,

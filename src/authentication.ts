@@ -1,9 +1,5 @@
-interface AccessToken {
-    access_token: string;
-    token_type: string;
-    expires_in: number;
-
-}
+import { AccessToken } from "./interfaces/index.js";
+import { handleResponse } from "./utility/handle-response.js";
 
 export class Authentication {
     accessToken: string = "";
@@ -17,7 +13,7 @@ export class Authentication {
     /**
      * Get an access token from the NZ Post API.
      */
-    async getAccessToken(): Promise<string | undefined> {
+    async getAccessToken(): Promise<string> {
         const requestBody = `grant_type=client_credentials&client_id=${this.clientId}&client_secret=${this.clientSecret}`;
 
         const requestOptions = {
@@ -28,23 +24,18 @@ export class Authentication {
             body: requestBody,
         };
 
-        try {
-            const response = await fetch(this.baseURL, requestOptions);
 
-            if (!response.ok) {
-                throw new Error(`Error authenticating with NZ Post API: ${response.status} - ${response.statusText}`);
-            }
+        const request = await fetch(this.baseURL, requestOptions);
 
-            const { access_token, token_type, expires_in } = await response.json() as AccessToken;
+        const response = await handleResponse<AccessToken>(request);
 
-            this.accessToken = access_token;
+        const { access_token, token_type, expires_in } = response;
 
-            this.tokenExpirationTime = Math.floor(Date.now() / 1000) + expires_in;
+        this.accessToken = access_token;
 
-            return access_token
-        } catch (error) {
-            // TODO: Handle errors
-        }
+        this.tokenExpirationTime = Math.floor(Date.now() / 1000) + expires_in;
+
+        return access_token
     }
 
     /**

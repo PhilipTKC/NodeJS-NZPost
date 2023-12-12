@@ -18,6 +18,6 @@ export class ParcelLabel extends Base {
      * Request for creating labels which are to be delivered within New Zealand. 
      */
     async createDomesticLabel(label: Label) {
-        return await this.performAuthorizedRequest<LabelResponse, any>(this.baseURL, "POST", label);
+        return await this.performAuthorizedRequest<LabelResponse, Label>(this.baseURL, "POST", label);
     }
 }

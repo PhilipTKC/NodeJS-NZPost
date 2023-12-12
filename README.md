@@ -7,14 +7,15 @@ Work in Progress, Do not use.
 ```ts
 const nzPost = new NZPost("YOUR CLIENT ID", "YOUR CLIENT SECRET");
 
-const address = await nzPost.addressChecker.find("1 Queen Street", "Auckland");
+const addressResponse = await nzPost.addressChecker.find("line1", "line2");
 
-if (address && address.success) {
-    const dpid = address.addresses[0].DPID;
-    console.log(dpid);
-    const detail = await nzPost.addressChecker.detail(dpid);
-    console.log(detail);
-}
+const details = await nzPost.addressChecker.detail(addressResponse.addresses[0].DPID);
+
+console.log(details.details);
+
+const suggestion = await nzPost.addressChecker.suggest("address");
+
+console.log(suggestion.addresses);
 ```
 
 ## Acknowledgments

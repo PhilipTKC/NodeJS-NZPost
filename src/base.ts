@@ -1,15 +1,7 @@
 import { Authentication } from './authentication.js';
 
-interface RequestOptions {
-    method: string;
-    headers: {
-        client_id: string;
-        Authorization: string;
-        "Content-Type"?: string;
-        Accept?: string;
-    };
-    body?: any;
-}
+import { RequestOptions } from './interfaces/index.js';
+import { handleResponse } from './utility/handle-response.js';
 
 export class Base {
     constructor(private authentication: Authentication) { }
@@ -20,7 +12,7 @@ export class Base {
         }
     }
 
-    private async sendHttpRequest<TResponse, TBody = undefined>(url: string, method = "GET", body?: TBody): Promise<TResponse | undefined> {
+    private async sendHttpRequest<TResponse, TBody>(url: string, method = "GET", body?: TBody): Promise<TResponse> {
         const init: RequestOptions = {
             method,
             headers: {
@@ -35,22 +27,12 @@ export class Base {
             init.body = JSON.stringify(body);
         }
 
-        try {
-            const response = await fetch(url, init);
+        const response = await fetch(url, init);
 
-            if (!response.ok) {
-                throw new Error(`Error: ${response.status} - ${response.statusText}`);
-            }
-            const jsonResponse = await response.json();
-    
-            return jsonResponse as TResponse;
-        } catch (error) {
-            console.log(error);
-            // TODO: Handle errors
-        }
+        return await handleResponse<TResponse>(response);
     }
 
-    protected async performAuthorizedRequest<TResponse, TBody = undefined>(url: string, method = "GET", body?: TBody): Promise<TResponse | undefined> {
+    protected async performAuthorizedRequest<TResponse, TBody = undefined>(url: string, method = "GET", body?: TBody): Promise<TResponse> {
         await this.ensureAccessToken();
         return await this.sendHttpRequest<TResponse, TBody>(url, method, body);
     }

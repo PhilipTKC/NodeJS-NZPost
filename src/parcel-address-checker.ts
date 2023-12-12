@@ -1,22 +1,20 @@
-import { Base } from "./base.js";
-
-import { AddressResponse, DetailResponse, SuggestionResponse } from "./interfaces/index.js";
+import { APIService } from "./api-service.js";
 
 /**
  * The AddressChecker API enables search for domestic addresses for mail.
  */
-export class AddressChecker extends Base {
-    private baseURL = "https://api.nzpost.co.nz/addresschecker/1.0";
+export class AddressChecker {
+    #apiService: APIService;
+
+    constructor(apiService: APIService) {
+        this.#apiService = apiService;
+    }
 
     /**
     * Takes an address fragment, and returns a set of addresses that match the fragment.
     */
     async find(line1: string, line2?: string) {
-        let apiUrl = line2 ? `${this.baseURL}/find?address_line_1=${line1}&address_line_2=${line2}` : `${this.baseURL}/find?address_line_1=${line1}`;
-
-        const requestURL = encodeURI(apiUrl);
-
-        return await this.performAuthorizedRequest<AddressResponse>(requestURL);
+        return await this.#apiService.findAddress(line1, line2);
     }
 
     /**
@@ -24,14 +22,13 @@ export class AddressChecker extends Base {
      * DPID can be obtained from the find method.
      */
     async detail(dpid: number) {
-        let requestURL = encodeURI(`${this.baseURL}/details?dpid=${dpid}`);
-
-        return await this.performAuthorizedRequest<DetailResponse>(requestURL);
+        return await this.#apiService.getAddressDetail(dpid);
     }
 
+    /**
+     * Takes an address fragment, and returns a set of suggested addresses that match the fragment.
+     */
     async suggest(query: string) {
-        let requestURL = encodeURI(`${this.baseURL}/suggest?q=${query}`);
-
-        return await this.performAuthorizedRequest<SuggestionResponse>(requestURL);
+        return await this.#apiService.suggestAddress(query);
     }
 }

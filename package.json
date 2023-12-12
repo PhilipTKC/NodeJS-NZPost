@@ -5,8 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "compile": "tsc",
-    "start": "npx ts-node --esm src/index.ts"
+    "compile": "tsc"
   },
   "author": "",
   "license": "ISC",

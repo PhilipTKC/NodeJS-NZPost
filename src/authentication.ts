@@ -11,9 +11,9 @@ export class Authentication {
     constructor(public clientId: string, private clientSecret: string) { }
 
     /**
-     * Get an access token from the NZ Post API.
+     * Set access token from the NZ Post API.
      */
-    async getAccessToken(): Promise<string> {
+    async setAccessToken(): Promise<void> {
         const requestBody = `grant_type=client_credentials&client_id=${this.clientId}&client_secret=${this.clientSecret}`;
 
         const requestOptions = {
@@ -24,18 +24,13 @@ export class Authentication {
             body: requestBody,
         };
 
-
         const request = await fetch(this.baseURL, requestOptions);
 
-        const response = await handleResponse<AccessToken>(request);
-
-        const { access_token, token_type, expires_in } = response;
+        const { access_token, token_type, expires_in } = await handleResponse<AccessToken>(request);
 
         this.accessToken = access_token;
 
         this.tokenExpirationTime = Math.floor(Date.now() / 1000) + expires_in;
-
-        return access_token
     }
 
     /**

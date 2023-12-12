@@ -1,23 +1,21 @@
-import { Base } from "./base.js";
+import { APIService } from "./api-service.js";
 
-interface Label { }
-
-interface LabelResponse {
-    success: boolean;
-    message_id: string;
-    consignment_id: string;
-}
+import { Label } from "./interfaces/index.js";
 
 /**
  * The ParcelLabel API is used to create parcel and destination specific shipping labels for domestic or international services.
  */
-export class ParcelLabel extends Base {
-    private baseURL = "https://api.nzpost.co.nz/parcellabel/v3/labels";
+export class ParcelLabel {
+    #apiService: APIService;
+
+    constructor(apiService: APIService) {
+        this.#apiService = apiService;
+    }
 
     /**
      * Request for creating labels which are to be delivered within New Zealand. 
      */
     async createDomesticLabel(label: Label) {
-        return await this.performAuthorizedRequest<LabelResponse, Label>(this.baseURL, "POST", label);
+        return await this.#apiService.createDomesticLabel(label);
     }
 }

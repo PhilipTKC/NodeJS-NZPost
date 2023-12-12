@@ -1,33 +1,50 @@
 import { Authentication } from "./authentication.js";
+import { APIService } from "./api-service.js";
+
+import { AddressChecker } from "./parcel-address-checker.js";
 import { ParcelAddress } from "./parcel-address.js";
 import { ParcelLabel } from "./parcel-label.js";
-import { AddressChecker } from "./parcel-address-checker.js";
+import { ParcelTrack } from "./parcel-track.js";
 
 export class NZPost {
-    private authentication: Authentication;
+    #parcelAddressChecker: AddressChecker;
 
-    private parcelAddressChecker: AddressChecker;
+    #parcelAddress: ParcelAddress;
 
-    private parcelAddress: ParcelAddress;
+    #parcelLabel: ParcelLabel;
 
-    private parcelLabel: ParcelLabel;
+    #parcelTrack: ParcelTrack;
 
-    constructor(private readonly clientId: string, private readonly clientSecret: string) {
-        this.authentication = new Authentication(this.clientId, this.clientSecret);
-        this.parcelAddressChecker = new AddressChecker(this.authentication);
-        this.parcelAddress = new ParcelAddress(this.authentication);
-        this.parcelLabel = new ParcelLabel(this.authentication);
+    #clientId: string;
+
+    #clientSecret: string;
+
+    constructor(clientId: string, clientSecret: string) {
+        this.#clientId = clientId;
+        this.#clientSecret = clientSecret;
+
+        const authentication = new Authentication(this.#clientId, this.#clientSecret);
+        const apiService = new APIService(authentication);
+
+        this.#parcelAddressChecker = new AddressChecker(apiService);
+        this.#parcelAddress = new ParcelAddress(apiService);
+        this.#parcelLabel = new ParcelLabel(apiService);
+        this.#parcelTrack = new ParcelTrack(apiService);
     }
 
     get addressChecker() {
-        return this.parcelAddressChecker;
+        return this.#parcelAddressChecker;
     }
 
     get address() {
-        return this.parcelAddress;
+        return this.#parcelAddress;
     }
 
     get label() {
-        return this.parcelLabel;
+        return this.#parcelLabel;
+    }
+
+    get track() {
+        return this.#parcelTrack;
     }
 }

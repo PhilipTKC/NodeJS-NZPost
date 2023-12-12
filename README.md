@@ -6,16 +6,6 @@ Work in Progress, Do not use.
 
 ```ts
 const nzPost = new NZPost("YOUR CLIENT ID", "YOUR CLIENT SECRET");
-
-const addressResponse = await nzPost.addressChecker.find("line1", "line2");
-
-const details = await nzPost.addressChecker.detail(addressResponse.addresses[0].DPID);
-
-console.log(details.details);
-
-const suggestion = await nzPost.addressChecker.suggest("address");
-
-console.log(suggestion.addresses);
 ```
 
 ## Acknowledgments

@@ -7,6 +7,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -16,31 +19,51 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { TrackService } from "./services/track.js";
-import { injectable } from "tsyringe";
-let ParcelTrack = class ParcelTrack {
-    constructor(apiService) {
-        this.apiService = apiService;
-        this.apiService = apiService;
+import { Authentication } from './authentication.js';
+import { handleResponse } from '../utility/handle-response.js';
+import { Method } from '../interfaces/index.js';
+import { inject, injectable } from 'tsyringe';
+let Base = class Base {
+    constructor(authentication) {
+        this.authentication = authentication;
+        this.baseURL = "";
     }
-    getParcelTrackingDetails(trackingReference) {
+    ensureAccessToken() {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.apiService.getParcelTrackingDetails(trackingReference);
+            if (!this.authentication.accessToken || this.authentication.isTokenExpired()) {
+                yield this.authentication.setAccessToken();
+            }
         });
     }
-    subscribeWithAccountNumber(accountNumber, webhookUrl) {
+    sendHttpRequest(url, method, body) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.apiService.subscribeWithAccountNumber(accountNumber, webhookUrl);
+            console.log(this.authentication.accessToken);
+            const init = {
+                method,
+                headers: {
+                    client_id: this.authentication.clientId,
+                    Authorization: `Bearer ${this.authentication.accessToken}`,
+                    Accept: "application/json"
+                }
+            };
+            if (method === "POST" && body) {
+                init.headers["Content-Type"] = "application/json";
+                init.body = JSON.stringify(body);
+            }
+            const request = yield fetch(url, init);
+            return yield handleResponse(request);
         });
     }
-    subscribeWithTrackingNumber(trackingReference, webhookUrl) {
+    performAuthorizedRequest(url, method = Method.GET, body) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.apiService.subscribeWithTrackingNumber(trackingReference, webhookUrl);
+            yield this.ensureAccessToken();
+            return yield this.sendHttpRequest(url, method, body);
         });
     }
 };
-ParcelTrack = __decorate([
+Base = __decorate([
     injectable(),
-    __metadata("design:paramtypes", [TrackService])
-], ParcelTrack);
-export { ParcelTrack };
+    __param(0, inject(Authentication)),
+    __metadata("design:paramtypes", [Authentication])
+], Base);
+export { Base };

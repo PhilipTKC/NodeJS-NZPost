@@ -1,10 +1,10 @@
 export declare class Authentication {
-    clientId: string;
-    private clientSecret;
     accessToken: string;
     private tokenExpirationTime;
     private baseURL;
-    constructor(clientId: string, clientSecret: string);
+    clientId: string;
+    clientSecret: string;
+    setClientIdAndSecret(clientId: string, clientSecret: string): void;
     /**
      * Set access token from the NZ Post API.
      */

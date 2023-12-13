@@ -1,6 +1,8 @@
-import { AccessToken } from "./interfaces/index.js";
-import { handleResponse } from "./utility/handle-response.js";
+import { AccessToken } from "../interfaces/index.js";
+import { handleResponse } from "../utility/handle-response.js";
+import { injectable } from "tsyringe";
 
+@injectable()
 export class Authentication {
     accessToken: string = "";
 
@@ -8,7 +10,14 @@ export class Authentication {
 
     private baseURL = "https://oauth.nzpost.co.nz/as/token.oauth2";
 
-    constructor(public clientId: string, private clientSecret: string) { }
+    clientId: string = "";
+
+    clientSecret: string = "";
+    
+    setClientIdAndSecret(clientId: string, clientSecret: string) {
+        this.clientId = clientId;
+        this.clientSecret = clientSecret;
+    }
 
     /**
      * Set access token from the NZ Post API.

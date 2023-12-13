@@ -5,6 +5,8 @@ Work in Progress, Do not use.
 ### Usage
 
 ```ts
+import { NZPost } from 'nodejs-nzpost-wrapper';
+
 const nzPost = new NZPost("YOUR CLIENT ID", "YOUR CLIENT SECRET");
 ```
 

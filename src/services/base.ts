@@ -17,7 +17,6 @@ export class Base {
     }
 
     private async sendHttpRequest<TResponse, TBody>(url: string, method: Method, body?: TBody): Promise<TResponse> {
-        console.log(this.authentication.accessToken);
         const init: RequestOptions = {
             method,
             headers: {

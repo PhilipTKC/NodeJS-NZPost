@@ -24,15 +24,15 @@ import { AddressService } from "./services/adress.js";
 import { LabelService } from "./services/label.js";
 import { TrackService } from "./services/track.js";
 container.registerSingleton(Authentication, Authentication);
-container.register(Base, { useClass: Base });
-container.register(AddressChecker, { useClass: AddressChecker });
-container.register(AddressCheckerService, { useClass: AddressCheckerService });
-container.register(ParcelAddress, { useClass: ParcelAddress });
-container.register(AddressService, { useClass: AddressService });
-container.register(ParcelLabel, { useClass: ParcelLabel });
-container.register(LabelService, { useClass: LabelService });
-container.register(ParcelTrack, { useClass: ParcelTrack });
-container.register(TrackService, { useClass: TrackService });
+container.registerSingleton(Base, Base);
+container.registerSingleton(AddressChecker, AddressChecker);
+container.registerSingleton(AddressCheckerService, AddressCheckerService);
+container.registerSingleton(ParcelAddress, ParcelAddress);
+container.registerSingleton(AddressService, AddressService);
+container.registerSingleton(ParcelLabel, ParcelLabel);
+container.registerSingleton(LabelService, LabelService);
+container.registerSingleton(ParcelTrack, ParcelTrack);
+container.registerSingleton(TrackService, TrackService);
 let NZPost = NZPost_1 = class NZPost {
     constructor(addressChecker, parcelAddress, parcelLabel, parcelTrack) {
         this.addressChecker = addressChecker;

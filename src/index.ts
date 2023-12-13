@@ -15,19 +15,19 @@ import { LabelService } from "./services/label.js";
 import { TrackService } from "./services/track.js";
 
 container.registerSingleton(Authentication, Authentication);
-container.register(Base, { useClass: Base });
+container.registerSingleton(Base, Base);
 
-container.register(AddressChecker, { useClass: AddressChecker });
-container.register(AddressCheckerService, { useClass: AddressCheckerService });
+container.registerSingleton(AddressChecker, AddressChecker);
+container.registerSingleton(AddressCheckerService, AddressCheckerService);
 
-container.register(ParcelAddress, { useClass: ParcelAddress });
-container.register(AddressService, { useClass: AddressService });
+container.registerSingleton(ParcelAddress, ParcelAddress);
+container.registerSingleton(AddressService, AddressService);
 
-container.register(ParcelLabel, { useClass: ParcelLabel });
-container.register(LabelService, { useClass: LabelService });
+container.registerSingleton(ParcelLabel, ParcelLabel);
+container.registerSingleton(LabelService, LabelService);
 
-container.register(ParcelTrack, { useClass: ParcelTrack });
-container.register(TrackService, { useClass: TrackService });
+container.registerSingleton(ParcelTrack, ParcelTrack);
+container.registerSingleton(TrackService, TrackService);
 
 @injectable()
 export class NZPost {

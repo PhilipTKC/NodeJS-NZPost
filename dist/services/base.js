@@ -37,7 +37,6 @@ let Base = class Base {
     }
     sendHttpRequest(url, method, body) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log(this.authentication.accessToken);
             const init = {
                 method,
                 headers: {
